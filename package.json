@@ -4,13 +4,14 @@
   "scripts": {
     "dev": "svelte-kit dev",
     "build": "svelte-kit build",
-    "preview": "svelte-kit preview",
+    "preview": "node ./src/server.mjs",
     "check": "svelte-check --tsconfig ./tsconfig.json",
     "check:watch": "svelte-check --tsconfig ./tsconfig.json --watch"
   },
   "dependencies": {
     "busboy": "^0.3.1",
-    "fs-extra": "^10.0.0"
+    "fs-extra": "^10.0.0",
+    "polka": "^0.5.2"
   },
   "devDependencies": {
     "@sveltejs/adapter-node": "next",

@@ -43,24 +43,24 @@ const uploadFiles = req => {
         /* Sets the Busboy parser */
         let parser = new busboy({headers: req.headers});
         /* Process the data */
-        parser.on('file', (_fieldname, file, filename, _encoding, _mimetype) => {
+        parser.on('file', (_fieldName, file, fileName, _encoding, _mimeType) => {
             uploadData.filesIndex += 1;
-            readFile(uploadData, file, filename, req);
+            readFile(uploadData, file, fileName, req);
         });
-        parser.on('field', (fieldname, val, _fieldnameTruncated, _valTruncated, _encoding, _mimetype) => {
-            if (fieldname === 'mimeType') {
+        parser.on('field', (fieldName, val, _fieldNameTruncated, _valTruncated, _encoding, _mimeType) => {
+            if (fieldName === 'mimeType') {
                 uploadData.mimeTypesIndex += 1;
                 uploadData.mimeTypes.push(val);
             }
-            if (fieldname === 'name') {
+            if (fieldName === 'name') {
                 uploadData.namesIndex += 1;
                 uploadData.names.push(val);
             }
-            if (fieldname === 'path') {
+            if (fieldName === 'path') {
                 uploadData.pathsIndex += 1;
                 uploadData.paths.push(val);
             }
-            if (fieldname === 'size') {
+            if (fieldName === 'size') {
                 uploadData.sizesIndex += 1;
                 uploadData.sizes.push(val);
             }
@@ -84,30 +84,33 @@ const uploadFiles = req => {
     });
 };
 
+const uploadMiddleware = async (req, res, next) => {
+    /* Checks if the upload URL is called */
+    if (req.url.startsWith('/upload')) {
+        /* Uploads the files */
+        try {
+            await uploadFiles(req);
+            res.writeHead(200, {
+                'Content-Type': 'text/plain',
+            });
+            return res.end('ok');
+        } catch (err) {
+            res.writeHead(500, {
+                'Content-Type': 'text/plain',
+            });
+            return res.end('upload plugin error: ' + err);
+        }
+    } else {
+        /* Other URL: continue... */
+        next();
+    }
+};
+
 /* The upload plugin. See the svelte.config.js file */
 const uploadPlugin = {
     name: 'upload-middleware',
     configureServer (server) {
-        server.middlewares.use(((req, res, next) => {
-            if (req.url.startsWith('/upload')) {
-                /* Uploads the files */
-                uploadFiles(req)
-                .then(() => {
-                    res.writeHead(200, {
-                        'Content-Type': 'text/plain',
-                    });
-                    return res.end('ok');
-                })
-                .catch(err => {
-                    res.writeHead(500, {
-                        'Content-Type': 'text/plain',
-                    });
-                    return res.end('upload plugin error: ' + err);
-                });
-            } else {
-                next();
-            }
-        }));
+        server.middlewares.use(uploadMiddleware);
     },
 };
 
@@ -150,4 +153,4 @@ const writeFile = (uploadData, staticPath, index) => {
     });
 };
 
-export {uploadPlugin};
+export {uploadMiddleware, uploadPlugin};
