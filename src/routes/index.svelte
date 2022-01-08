@@ -25,7 +25,7 @@
             let formData = new FormData();
             /* Size must be the first part */
             formData.append('size', fileToUpload.size);
-            /* Others parts */
+            /* Other parts */
             formData.append('file', fileToUpload);
             formData.append('name', fileName);
             formData.append('mimeType', fileToUpload.mimeType);
