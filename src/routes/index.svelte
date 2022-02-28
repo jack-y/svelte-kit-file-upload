@@ -3,7 +3,7 @@
     const filesPath = '/'; // in this example: static root
 
     /* The File object from the form */
-    let fileToUpload = false;
+    let fileToUpload = null;
     let fileName = ''
 
     /* The button status */
