@@ -13,8 +13,6 @@ const config = {
         // You can create optimized builds for different platforms by
         // specifying a different adapter
         adapter: nodeAdapter(),
-        // hydrate the <div id="svelte"> element in src/app.html
-        target: '#svelte',
         // vite options
         vite: {
             // The File Upload plugin
