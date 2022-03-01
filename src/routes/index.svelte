@@ -42,7 +42,7 @@
                 if (!res.ok) {  // the response has a bad status (500..)
                     throw new Error('upload error status ' + res.status + ', status text: ' + res.statusText);
                 } else {
-                    alert('Done! See the uploaded file in the /static directory.');
+                    alert(`Done! See the uploaded file in the /static${filesPath} directory.`);
                 }
             })
             .catch(err => alert('Ooops: ' + err));
